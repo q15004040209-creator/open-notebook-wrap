@@ -1,11 +1,13 @@
 # 📓 open-notebook-wrap
 
-> 基于 [open-notebook](https://github.com/lfnovo/open-notebook) 的开源播客 AI 工具封装 — 把播客/音频转成 AI 摘要知识库，**支持私有部署**，完全可控。
+> 基于 [open-notebook](https://github.com/lfnovo/open-notebook) v1.9.0 的开源播客 AI 工具封装 — 把播客音频转成 AI 摘要知识库，**支持私有部署**，完全可控。
 
-## 🎯 是什么
+**上游版本：v1.9.0**（2026-06-02）|⭐ 主要更新：新增 Mistral Voxtral / Deepgram / xAI 音频提供商，升级 Esperanto 至 2.22.0，Ollama 默认上下文窗口调整
+
+## 🎯 是什么？
 
 open-notebook 是开源的 Notebook LM 实现，支持：
-- 📝 **播客/音频转文字**（Whisper ASR）
+- 📝 **播客/音频转文本**（Whisper ASR）
 - 🧠 **AI 摘要生成**（基于 LLM）
 - 📚 **知识库构建**（向量嵌入 + 检索）
 - 🔊 **音频对话**（语音交互）
@@ -53,10 +55,10 @@ open-notebook-wrap/
 │   ├── app/                  # 前端 (Next.js)
 │   ├── api/                  # 后端 API
 │   │   ├── upload.py         # 音频上传
-│   │   ├── transcribe.py     # 语音转文字 (Whisper)
+│   │   ├── transcribe.py     # 语音转文本 (Whisper)
 │   │   ├── summarize.py      # AI 摘要生成
 │   │   └── search.py         # 知识检索
-│   ├── models/              # 数据模型
+│   ├── models/ # 数据模型
 │   ├── docker-compose.yml    # Docker 配置
 │   └── requirements.txt
 └── docs/
@@ -92,10 +94,10 @@ POST /api/transcribe
 Response:
 {
   "id": "ep_001",
-  "transcript": "今天我们来聊聊 AI Agent 的发展...",
+  "transcript": "今天我们来聊 AI Agent 的发展..",
   "language": "zh",
   "segments": [
-    {"start": 0.0, "end": 12.5, "text": "今天我们来聊聊 AI Agent 的发展..."},
+    {"start": 0.0, "end": 12.5, "text": "今天我们来聊 AI Agent 的发展.."},
     ...
   ]
 }
@@ -113,7 +115,7 @@ POST /api/summarize
 Response:
 {
   "id": "ep_001",
-  "summary": "本文讨论了 AI Agent 的三个发展阶段...",
+  "summary": "本文讨论 AI Agent 的三个发展阶段..",
   "key_points": [
     "2024年是AI Agent元年",
     "多模态是核心能力",
@@ -140,7 +142,7 @@ Response:
   "results": [
     {
       "source": "ep_001",
-      "text": "AI Agent 通过自动化重复任务来提升生产力...",
+      "text": "AI Agent 通过自动化重复任务来提升生产力..",
       "timestamp": "00:23:15",
       "score": 0.92
     }
@@ -151,16 +153,16 @@ Response:
 ## 📊 系统架构
 
 ```
-┌─────────────┐    ┌──────────────┐    ┌─────────────┐
+┌─────────────┐   ┌──────────────┐   ┌─────────────┐
 │  前端 UI    │───▶│  FastAPI     │───▶│  Whisper    │
-│ (Next.js)   │    │  Backend     │    │  (ASR)      │
-└─────────────┘    └──────────────┘    └─────────────┘
+│  (Next.js)  │   │  Backend     │   │  (ASR)      │
+└─────────────┘   └──────────────┘   └─────────────┘
                          │
-                         ▼
-                   ┌──────────────┐    ┌─────────────┐
+                         │
+                   ┌──────────────┐   ┌─────────────┐
                    │  PostgreSQL  │───▶│  LLM API    │
-                   │  (向量存储)   │    │ (GPT-4o等)  │
-                   └──────────────┘    └─────────────┘
+                   │  (向量存储)   │   │  (GPT-4o)   │
+                   └──────────────┘   └─────────────┘
 ```
 
 ## 🐳 Docker 配置
@@ -190,10 +192,10 @@ services:
 
 | 变量 | 说明 | 必需 |
 |------|------|------|
-| `OPENAI_API_KEY` | OpenAI API Key | 是 |
-| `WHISPER_MODEL` | Whisper 模型大小 | 否（默认 base） |
-| `DATABASE_URL` | PostgreSQL 连接字符串 | 否 |
-| `JWT_SECRET` | JWT 签名密钥 | 是（生产环境） |
+| `OPENAI_API_KEY` | OpenAI API Key | ✅ |
+| `WHISPER_MODEL` | Whisper 模型大小 | 否（默认 base）|
+| `DATABASE_URL` | PostgreSQL 连接字符串 | ✅ |
+| `JWT_SECRET` | JWT 签名密钥 | 是（生产环境）|
 
 ## 📄 许可证
 
